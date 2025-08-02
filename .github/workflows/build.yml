@@ -1,0 +1,33 @@
+name: Build EXE
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: 📥 Скачать код
+      uses: actions/checkout@v3
+
+    - name: 🐍 Установить Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: 📦 Установить зависимости
+      run: |
+        pip install -r install.txt
+        pip install pyinstaller
+
+    - name: 🏗️ Собрать .exe
+      run: |
+        pyinstaller --onefile --noconsole PCToolsBot.py
+
+    - name: 📤 Загрузить .exe файл
+      uses: actions/upload-artifact@v4
+      with:
+        name: PCToolsBot-exe
+        path: dist/PCToolsBot.exe
